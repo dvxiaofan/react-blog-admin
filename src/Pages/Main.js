@@ -5,7 +5,6 @@ import Login from './Login';
 function Main() {
 	return (
 		<Router>
-			<h2>Main page</h2>
 			<Route path='/login/' exact component={Login} />
 		</Router>
 	);
