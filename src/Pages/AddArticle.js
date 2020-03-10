@@ -91,35 +91,45 @@ function AddArticle(props) {
 			return false;
 		}
 
-		let dataProps = {}
-		let dateText = showDate.replace('-', '/')
+		let dataProps = {};
+		let dateText = showDate.replace('-', '/');
 
-		dataProps.type_id = selectedType
-		dataProps.title = articleTitle
-		dataProps.article_content = articleContent
-		dataProps.introduce = introduceMd
-		dataProps.addTime = (new Date(dateText).getTime()) / 1000
+		dataProps.type_id = selectedType;
+		dataProps.title = articleTitle;
+		dataProps.article_content = articleContent;
+		dataProps.introduce = introduceMd;
+		dataProps.addTime = new Date(dateText).getTime() / 1000;
 
-		if(articleId === 0) {
+		if (articleId === 0) {
 			dataProps.view_count = 0;
 			axios({
 				method: 'post',
 				url: servicePath.addArticle,
 				data: dataProps,
-				withCredentials: true		// 前后端共享session
-			}).then(
-				res => {
-					setArticleId(res.data.insertId)
-					if(res.data.isSuccess) {
-						message.success('文章发布成功')
-					} else {
-						message.error('文章发布失败')
-					}
+				withCredentials: true // 前后端共享session
+			}).then(res => {
+				setArticleId(res.data.insertId);
+				if (res.data.isSuccess) {
+					message.success('文章发布成功');
+				} else {
+					message.error('文章发布失败');
 				}
-			)
-
+			});
+		} else {	// 修改文章
+			dataProps.id = articleId;
+			axios({
+				method: 'post',
+				url: servicePath.updateArticle,
+				data: dataProps,
+				withCredentials: true
+			}).then(res => {
+				if (res.data.isSuccess) {
+					message.success('文章修改成功');
+				} else {
+					message.error('文章保存失败');
+				}
+			});
 		}
-
 	};
 
 	// TODO: 测试代码

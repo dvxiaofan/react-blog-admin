@@ -6,6 +6,7 @@ let servicePath = {
     getTypeInfo: ipUrl + 'getTypeInfo',     // 获取文章类型信息
     checkLogout: ipUrl + 'checkLogout',     // 测试退出
     addArticle: ipUrl + 'addArticle',       // 发布文章
+    updateArticle: ipUrl + 'updateArticle', // 更新文章
 }
 
 export default servicePath
