@@ -9,6 +9,20 @@ const { confirm } = Modal;
 const ArticleList = props => {
 	const [list, setList] = useState([]);
 
+	useEffect(() => {
+		getList();
+	}, []);
+
+	const getList = () => {
+		axios({
+			method: 'get',
+			url: servicePath.getArticleList,
+			withCredentials: true
+		}).then(res => {
+			setList(res.data.data);
+		});
+	};
+
 	return (
 		<div>
 			<List
@@ -39,7 +53,7 @@ const ArticleList = props => {
 							<Col span={8}>{item.title}</Col>
 							<Col span={4}>{item.typeName}</Col>
 							<Col span={5}>{item.addTime}</Col>
-							<Col span={3}>{item.view_count}</Col>
+							<Col span={3}>{item.viewCount}</Col>
 							<Col span={4}>
 								<Button type='primary'>修改</Button>
 								&nbsp;
