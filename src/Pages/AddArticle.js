@@ -105,10 +105,10 @@ function AddArticle(props) {
 			axios({
 				method: 'post',
 				url: servicePath.addArticle,
-				data: dataProps
+				data: dataProps,
+				withCredentials: true		// 前后端共享session
 			}).then(
 				res => {
-					console.log('reess', res)
 					setArticleId(res.data.insertId)
 					if(res.data.isSuccess) {
 						message.success('文章发布成功')
