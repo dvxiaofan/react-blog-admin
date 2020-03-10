@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import marked from 'marked';
 import '../static/css/AddArticle.css';
-import { Row, Col, Input, Select, Button, DatePicker } from 'antd';
+import { Row, Col, Input, Select, Button, DatePicker, message } from 'antd';
 import axios from 'axios';
 import servicePath from '../config/apiUrl';
 
@@ -18,7 +18,7 @@ function AddArticle(props) {
 	const [showDate, setShowDate] = useState(); // 发布日期
 	const [updateDate, setUpdateDate] = useState(); // 修改日期
 	const [typeInfo, setTypeInfo] = useState([]); // 文章类别信息
-	const [selectedType, setSelectedType] = useState(1); // 选择的文章类别
+	const [selectedType, setSelectedType] = useState('选择文章类型'); // 选择的文章类别
 
 	const renderer = new marked.Renderer();
 
@@ -58,7 +58,7 @@ function AddArticle(props) {
 			url: servicePath.getTypeInfo,
 			withCredentials: true // 跨域检测参数
 		}).then(res => {
-			console.log('res.data', res.data)
+			// console.log('res.data', res.data);
 			if (res.data.data == '没有登录') {
 				localStorage.removeItem('openId');
 				props.history.push('/login');
@@ -68,19 +68,44 @@ function AddArticle(props) {
 		});
 	};
 
+	const selectTypeHandler = value => {
+		setSelectedType(value);
+	};
+
+	// 保存文章
+	const saveArticle = () => {
+		if(selectedType == '选择文章类型') {
+			message.error('必须选择文章类型')
+			return false
+		} else if(!articleTitle) {
+			message.error('还没有写标题')
+			return false
+		} else if(!articleContent) {
+			message.error('没有写文章')
+			return false
+		} else if(!introduceMd) {
+			message.error('没有写简介')
+			return false
+		} else if(!showDate) {
+			message.error('没有选择发布时间')
+			return false
+		} else {
+			message.success('检验通过')
+		}
+	}
+
+	// TODO: 测试代码
 	const testClick = () => {
 		axios({
 			method: 'get',
 			url: servicePath.checkLogout,
 			withCredentials: true // 跨域检测参数
-		}).then(
-			res => {
-				// console.log('checkLogout', res)
-				localStorage.removeItem('openId');
-				props.history.push('/login');
-			}
-		)
-	}
+		}).then(res => {
+			// console.log('checkLogout', res)
+			localStorage.removeItem('openId');
+			props.history.push('/login');
+		});
+	};
 
 	return (
 		<div>
@@ -88,13 +113,19 @@ function AddArticle(props) {
 				<Col span={18}>
 					<Row gutter={10}>
 						<Col span={20}>
-							<Input placeholder='博客标题' size='large' />
+							<Input
+								placeholder='博客标题'
+								value={articleTitle}
+								size='large'
+								onChange={e => setArticleTitle(e.target.value)}
+							/>
 						</Col>
 						<Col span={4}>
 							<Select
 								className='select-type'
 								defaultValue={selectedType}
 								size='large'
+								onChange={selectTypeHandler}
 							>
 								{typeInfo.map((item, index) => {
 									return (
@@ -131,7 +162,11 @@ function AddArticle(props) {
 					<Row>
 						<Col span={24}>
 							<Button size='large'>暂存文章</Button>&nbsp;
-							<Button type='primary' size='large' onClick={testClick}>
+							<Button
+								type='primary'
+								size='large'
+								onClick={saveArticle}
+							>
 								发布文章
 							</Button>
 							<br />
@@ -157,6 +192,9 @@ function AddArticle(props) {
 								<DatePicker
 									placeholder='发布时间'
 									size='large'
+									onChange={(date, dateString) => {
+										setShowDate(dateString);
+									}}
 								/>
 							</div>
 						</Col>
