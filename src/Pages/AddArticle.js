@@ -74,25 +74,53 @@ function AddArticle(props) {
 
 	// 保存文章
 	const saveArticle = () => {
-		if(selectedType == '选择文章类型') {
-			message.error('必须选择文章类型')
-			return false
-		} else if(!articleTitle) {
-			message.error('还没有写标题')
-			return false
-		} else if(!articleContent) {
-			message.error('没有写文章')
-			return false
-		} else if(!introduceMd) {
-			message.error('没有写简介')
-			return false
-		} else if(!showDate) {
-			message.error('没有选择发布时间')
-			return false
-		} else {
-			message.success('检验通过')
+		if (selectedType == '选择文章类型') {
+			message.error('必须选择文章类型');
+			return false;
+		} else if (!articleTitle) {
+			message.error('还没有写标题');
+			return false;
+		} else if (!articleContent) {
+			message.error('没有写文章');
+			return false;
+		} else if (!introduceMd) {
+			message.error('没有写简介');
+			return false;
+		} else if (!showDate) {
+			message.error('没有选择发布时间');
+			return false;
 		}
-	}
+
+		let dataProps = {}
+		let dateText = showDate.replace('-', '/')
+
+		dataProps.type_id = selectedType
+		dataProps.title = articleTitle
+		dataProps.article_content = articleContent
+		dataProps.introduce = introduceMd
+		dataProps.addTime = (new Date(dateText).getTime()) / 1000
+
+		if(articleId === 0) {
+			dataProps.view_count = 0;
+			axios({
+				method: 'post',
+				url: servicePath.addArticle,
+				data: dataProps
+			}).then(
+				res => {
+					console.log('reess', res)
+					setArticleId(res.data.insertId)
+					if(res.data.isSuccess) {
+						message.success('文章发布成功')
+					} else {
+						message.error('文章发布失败')
+					}
+				}
+			)
+
+		}
+
+	};
 
 	// TODO: 测试代码
 	const testClick = () => {
