@@ -41,6 +41,11 @@ const ArticleList = props => {
 		});
 	};
 
+	// 修改文章
+	const updateArticle = (id, checked) => {
+		props.history.push('/add/' + id)
+	}
+
 	return (
 		<div>
 			<List
@@ -73,7 +78,7 @@ const ArticleList = props => {
 							<Col span={5}>{item.addTime}</Col>
 							<Col span={3}>{item.viewCount}</Col>
 							<Col span={4}>
-								<Button type='primary'>修改</Button>
+								<Button type='primary' onClick={() => {updateArticle(item.id)}}>修改</Button>
 								&nbsp;
 								<Button
 									onClick={() => {

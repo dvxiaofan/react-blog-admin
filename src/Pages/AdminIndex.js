@@ -80,6 +80,11 @@ const AdminIndex = (props) => {
 								component={AddArticle}
 							/>
 							<Route
+								path='/add/:id'
+								exact
+								component={AddArticle}
+							/>
+							<Route
 								path='/list/'
 								exact
 								component={ArticleList}
