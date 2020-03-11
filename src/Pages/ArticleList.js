@@ -23,6 +23,24 @@ const ArticleList = props => {
 		});
 	};
 
+	const deleteArticle = id => {
+		confirm({
+			title: '确认删除文章吗?',
+			content: '如果点击OK文章将被直接删除',
+			onOk() {
+				axios(servicePath.delArticle + id, { withCredentials: true }).then(
+					res => {
+						message.success('文章删除成功');
+						getList();
+					}
+				);
+			},
+			onCancel() {
+				message.success('文章没有改变');
+			}
+		});
+	};
+
 	return (
 		<div>
 			<List
@@ -57,7 +75,13 @@ const ArticleList = props => {
 							<Col span={4}>
 								<Button type='primary'>修改</Button>
 								&nbsp;
-								<Button>删除</Button>
+								<Button
+									onClick={() => {
+										deleteArticle(item.id);
+									}}
+								>
+									删除
+								</Button>
 							</Col>
 						</Row>
 					</List.Item>

@@ -8,6 +8,7 @@ let servicePath = {
     addArticle: ipUrl + 'addArticle',           // 发布文章
     updateArticle: ipUrl + 'updateArticle',     // 更新文章
     getArticleList: ipUrl + 'getArticleList',   // 获取文章列表
+    delArticle: ipUrl + 'delArticle/',          // 删除文章
 }
 
 export default servicePath
